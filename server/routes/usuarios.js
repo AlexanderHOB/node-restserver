@@ -2,9 +2,11 @@ const express = require('express');
 const bcrypt = require('bcrypt');
 const _=require('underscore');
 const Usuario = require('../models/usuario');
+const {verificaToken,verificaRole} = require('../middlewares/autentificacion');
 const app= express();
 
-app.get('/usuario',(req,res)=>{
+app.get('/usuario',verificaToken,(req,res)=>{
+    
     let desde = req.query.desde || 0;
     let limite = req.query.limite || 5;
     desde = Number(desde)
@@ -30,7 +32,7 @@ app.get('/usuario',(req,res)=>{
             })
 
 });
-app.post('/usuario',(req,res)=>{
+app.post('/usuario',[verificaToken,verificaRole],(req,res)=>{
     let body=req.body;
     let usuario = new Usuario({
         nombre:body.nombre,
@@ -52,7 +54,7 @@ app.post('/usuario',(req,res)=>{
         })
     });
 });
-app.put('/usuario/:id',(req,res)=>{
+app.put('/usuario/:id',[verificaToken,verificaRole],(req,res)=>{
     let id = req.params.id;
     let body =  _.pick(req.body,['nombre','email','img','role','estado']);
     Usuario.findByIdAndUpdate(id,body,{new:true,runValidators:true},(err,usuarioDB)=>{
@@ -69,7 +71,7 @@ app.put('/usuario/:id',(req,res)=>{
     })
     
 });
-app.delete('/usuario/:id',(req,res)=>{
+app.delete('/usuario/:id',[verificaToken,verificaRole],(req,res)=>{
     let id = req.params.id;
     let cambiaEstado={
         estado:false
