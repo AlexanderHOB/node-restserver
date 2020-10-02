@@ -34,6 +34,9 @@ app.get('/usuario',verificaToken,(req,res)=>{
 });
 app.post('/usuario',[verificaToken,verificaRole],(req,res)=>{
     let body=req.body;
+    if(!body.password || body.password ==''){
+        return res.status(400).json({ok:false,err:{message:'Requiere ingresar el password'}});
+    }
     let usuario = new Usuario({
         nombre:body.nombre,
         email:body.email,
