@@ -16,7 +16,7 @@ let verificaToken = (req,res,next) =>{
         }
         req.usuario = decoded.usuario;
         next(); 
-    })
+    });
 };
 //=====================
 //  Verificar ADMINROLE
@@ -36,6 +36,25 @@ let verificaRole = (req,res,next) =>{
         })
     }    
 };
+//=====================
+//  Verificar token imagene
+//=====================
+
+let verificarTokenImage = (req,res,next) =>{
+
+    let token = req.query.token; // obtienes el token por el header
+    jwt.verify(token,process.env.SEED,(err,decoded)=>{
+        if(err){
+            return res.status(401).json({
+                ok:false,
+                err
+            });
+        }
+        req.usuario = decoded.usuario;
+        next(); 
+    })
+    
+};
 module.exports={
-    verificaToken,verificaRole
+    verificaToken,verificaRole,verificarTokenImage
 }

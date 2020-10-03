@@ -1,2 +1,4 @@
 node_modules/
 mlab.txt
+uploads/productos/*
+uploads/usuarios/*
